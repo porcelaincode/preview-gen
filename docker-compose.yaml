@@ -15,9 +15,24 @@ services:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - BUCKET_NAME=${BUCKET_NAME}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 384M
+        reservations:
+          cpus: '0.15'
+          memory: 256M
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3030/health"]
       interval: 30s
       timeout: 10s
       retries: 3 
+    networks:
+      - alphabench__network
+
+networks:
+    alphabench__network:
+        driver: bridge
+        external: true
